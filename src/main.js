@@ -1,21 +1,20 @@
-require('./util/environment');
+import './util/environment.js';
+import Dep from "./core/dep.js";
 
 function defineReactive(data, key, val) {
-  const dep = [];
+  const dep = new Dep();
   Object.defineProperty(data, key, {
     enumerable: true,
     configurable: true,
     get() {
-      dep.push(window.target);
+      dep.depend();
       return val;
     },
     set(newVal) {
       if (newVal === val) {
         return;
       }
-      for (const fn of dep) {
-        fn(newVal, val);
-      }
+      dep.notify(newVal, val);
       val = newVal;
     }
   });
