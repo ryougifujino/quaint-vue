@@ -1,5 +1,6 @@
 import './util/environment.js';
 import Dep from "./core/dep.js";
+import Watcher from "./core/watcher.js";
 
 function defineReactive(data, key, val) {
   const dep = new Dep();
@@ -14,18 +15,23 @@ function defineReactive(data, key, val) {
       if (newVal === val) {
         return;
       }
-      dep.notify(newVal, val);
       val = newVal;
+      dep.notify();
     }
   });
 }
 
-const data = {};
-defineReactive(data, 'name', 'Amy');
+const vm = {
+  data: {},
+  $watch(pathOrFn, cb) {
+    new Watcher(this, pathOrFn, cb);
+  }
+};
+defineReactive(vm.data, 'name', 'Amy');
 
-window.target = function (newVal, oldVal) {
+vm.$watch('name', function (newVal, oldVal) {
   console.log(`The name changes from ${oldVal} to ${newVal}`);
-}
-console.log('data.name', data.name);
-data.name = 'Tom';
-data.name = 'Franklin';
+});
+
+vm.data.name = 'Tom';
+vm.data.name = 'Franklin';

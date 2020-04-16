@@ -13,14 +13,14 @@ export default class Dep {
   }
 
   depend() {
-    if (window.target) {
+    if (window.target && this.subs.indexOf(window.target) === -1) {
       this.addSub(window.target);
     }
   }
 
-  notify(newVal, oldVal) {
+  notify() {
     for (const sub of this.subs) {
-      sub(newVal, oldVal);
+      sub.update();
     }
   }
 }
