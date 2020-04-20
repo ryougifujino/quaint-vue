@@ -1,10 +1,13 @@
 import Dep from "./dep.js";
+import { arrayMethods } from "./array.js";
 
 export default class Observer {
   constructor(value) {
 
     if (!Array.isArray(value)) {
       this.walk(value);
+    } else {
+      value.__proto__ = arrayMethods;
     }
   }
 
