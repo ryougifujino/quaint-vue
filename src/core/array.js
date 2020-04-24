@@ -14,8 +14,9 @@ export const arrayMethods = Object.create(arrayProto);
 
   Object.defineProperty(arrayMethods, method, {
     value: function mutator(...args) {
-      console.log('Intercepted!');
-      return original.apply(this, args);
+      const result = original.apply(this, args)
+      this.__ob__.dep.notify();
+      return result;
     },
     enumerable: false,
     writable: true,

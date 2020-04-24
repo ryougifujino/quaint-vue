@@ -3,6 +3,8 @@ import { arrayMethods } from "./array.js";
 
 export default class Observer {
   constructor(value) {
+    this.dep = new Dep();
+    def(value, '__ob__', this);
 
     if (!Array.isArray(value)) {
       this.walk(value);
@@ -20,9 +22,7 @@ export default class Observer {
 }
 
 function defineReactive(data, key, val) {
-  if (typeof val === 'object') {
-    new Observer(val);
-  }
+  const childOb = observe(val);
 
   const dep = new Dep();
   Object.defineProperty(data, key, {
@@ -30,6 +30,11 @@ function defineReactive(data, key, val) {
     configurable: true,
     get() {
       dep.depend();
+
+      if (childOb) {
+        childOb.dep.depend();
+      }
+
       return val;
     },
     set(newVal) {
@@ -39,5 +44,27 @@ function defineReactive(data, key, val) {
       val = newVal;
       dep.notify();
     }
+  });
+}
+
+function observe(value) {
+  if (typeof value !== 'object') {
+    return;
+  }
+  let ob;
+  if ('__ob__' in value && value.__ob__ instanceof Observer) {
+    ob = value.__ob__;
+  } else {
+    ob = new Observer(value);
+  }
+  return ob;
+}
+
+function def(obj, key, val, enumerable) {
+  Object.defineProperty(obj, key, {
+    value: val,
+    enumerable: !!enumerable,
+    writable: true,
+    configurable: true
   });
 }
