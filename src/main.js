@@ -4,7 +4,11 @@ import Observer from "./core/observer.js";
 
 const vm = {
   data: {
-    names: []
+    persons: [
+      {
+        name: 'Tom'
+      }
+    ]
   },
   $watch(pathOrFn, cb) {
     new Watcher(this, pathOrFn, cb);
@@ -12,9 +16,8 @@ const vm = {
 };
 new Observer(vm.data);
 
-vm.$watch('names', function (newVal, oldVal) {
-  console.log(`The names changes from ${oldVal} to ${newVal}`);
+vm.$watch('persons[0].name', function (newVal, oldVal) {
+  console.log(`The persons changes from ${oldVal} to ${newVal}`);
 });
 
-vm.data.names.push('Tom');
-vm.data.names.push('Franklin');
+vm.data.persons[0].name = 'Franklin';

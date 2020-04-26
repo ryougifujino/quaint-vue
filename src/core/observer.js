@@ -6,10 +6,11 @@ export default class Observer {
     this.dep = new Dep();
     def(value, '__ob__', this);
 
-    if (!Array.isArray(value)) {
-      this.walk(value);
-    } else {
+    if (Array.isArray(value)) {
       value.__proto__ = arrayMethods;
+      this.observeArray(value);
+    } else {
+      this.walk(value);
     }
   }
 
@@ -18,6 +19,12 @@ export default class Observer {
       const val = obj[key];
       defineReactive(obj, key, val);
     })
+  }
+
+  observeArray(items) {
+    for (const item of items) {
+      observe(item);
+    }
   }
 }
 

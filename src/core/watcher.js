@@ -20,11 +20,20 @@ export default class Watcher {
   }
 }
 
+const RE_SEGMENT_WITH_BRACKET = /(.+?)\[(.+?)]/;
+
 function parsePath(path) {
   const segments = path.split('.');
   return function (obj) {
     for (const segment of segments) {
-      obj = obj[segment];
+      const segmentWithBracketReExecArray = RE_SEGMENT_WITH_BRACKET.exec(segment);
+      if (segmentWithBracketReExecArray) {
+        const realSegment = segmentWithBracketReExecArray[1];
+        const bracketInner = segmentWithBracketReExecArray[2];
+        obj = obj[realSegment][bracketInner];
+      } else {
+        obj = obj[segment];
+      }
     }
     return obj;
   }
