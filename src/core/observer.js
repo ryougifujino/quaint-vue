@@ -59,7 +59,7 @@ function observe(value) {
     return;
   }
   let ob;
-  if ('__ob__' in value && value.__ob__ instanceof Observer) {
+  if (value.hasOwnProperty('__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__;
   } else {
     ob = new Observer(value);
