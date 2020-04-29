@@ -1,14 +1,20 @@
 export default class Watcher {
   constructor(vm, pathOrFn, cb) {
     this.vm = vm;
-    this.getter = parsePath(pathOrFn);
+    this.depIds = new Set();
+    this.deps = [];
+    if (typeof pathOrFn === 'function') {
+      this.getter = pathOrFn;
+    } else {
+      this.getter = parsePath(pathOrFn);
+    }
     this.cb = cb;
     this.value = this.get();
   }
 
   get() {
     window.target = this;
-    const value = this.getter(this.vm.data);
+    const value = this.getter.call(this.vm, this.vm.data);
     window.target = undefined;
     return value;
   }
@@ -17,6 +23,21 @@ export default class Watcher {
     const oldValue = this.value;
     this.value = this.get();
     this.cb.call(this.vm, this.value, oldValue);
+  }
+
+  addDep(dep) {
+    const id = dep.id;
+    if (!this.depIds.has(id)) {
+      this.depIds.add(id);
+      this.deps.push(dep);
+      dep.addSub(this);
+    }
+  }
+
+  teardown() {
+    for (const dep of this.deps) {
+      dep.removeSub(this);
+    }
   }
 }
 

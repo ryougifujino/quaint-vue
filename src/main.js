@@ -4,20 +4,33 @@ import Observer from "./core/observer.js";
 
 const vm = {
   data: {
-    persons: []
+    name: '',
+    age: ''
   },
-  $watch(pathOrFn, cb) {
-    new Watcher(this, pathOrFn, cb);
+  $watch(pathOrFn, cb, options = {}) {
+    const watcher = new Watcher(this, pathOrFn, cb);
+    if (options.immediate) {
+      cb.call(this, watcher.value);
+    }
+    return function unwatch() {
+      watcher.teardown();
+    };
   }
 };
+
 new Observer(vm.data);
 
-vm.data.persons.push({
-  name: 'Tom'
+const unwatch = vm.$watch(function () {
+  return this.data.name + this.data.age;
+}, function (newVal, oldVal) {
+  console.log(`The value changes from ${oldVal} to ${newVal}`);
+}, {
+  immediate: true
 });
 
-vm.$watch('persons[0].name', function (newVal, oldVal) {
-  console.log(`The persons changes from ${oldVal} to ${newVal}`);
-});
+vm.data.name = 'Tom';
+vm.data.age = "20";
 
-vm.data.persons[0].name = 'Franklin';
+unwatch();
+
+vm.data.name = 'Franklin';
