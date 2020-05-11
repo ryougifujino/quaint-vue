@@ -1,6 +1,9 @@
+import {traverse} from "./traverse.js";
+
 export default class Watcher {
-  constructor(vm, pathOrFn, cb) {
+  constructor(vm, pathOrFn, cb, options = {}) {
     this.vm = vm;
+    this.deep = !!options.deep;
     this.depIds = new Set();
     this.deps = [];
     if (typeof pathOrFn === 'function') {
@@ -15,6 +18,9 @@ export default class Watcher {
   get() {
     window.target = this;
     const value = this.getter.call(this.vm, this.vm.data);
+    if (this.deep) {
+      traverse(value);
+    }
     window.target = undefined;
     return value;
   }

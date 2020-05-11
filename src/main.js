@@ -4,11 +4,12 @@ import Observer from "./core/observer.js";
 
 const vm = {
   data: {
-    name: '',
-    age: ''
+    people: {
+      name: ''
+    }
   },
   $watch(pathOrFn, cb, options = {}) {
-    const watcher = new Watcher(this, pathOrFn, cb);
+    const watcher = new Watcher(this, pathOrFn, cb, options);
     if (options.immediate) {
       cb.call(this, watcher.value);
     }
@@ -20,17 +21,10 @@ const vm = {
 
 new Observer(vm.data);
 
-const unwatch = vm.$watch(function () {
-  return this.data.name + this.data.age;
-}, function (newVal, oldVal) {
-  console.log(`The value changes from ${oldVal} to ${newVal}`);
+vm.$watch('people', function (newVal, oldVal) {
+  console.log(`The value changes from ${JSON.stringify(oldVal)} to ${JSON.stringify(newVal)}`);
 }, {
-  immediate: true
+  deep: true
 });
 
-vm.data.name = 'Tom';
-vm.data.age = "20";
-
-unwatch();
-
-vm.data.name = 'Franklin';
+vm.data.people.name = 'Tom';
