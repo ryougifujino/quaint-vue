@@ -29,3 +29,5 @@ vm.$watch('people', function (newVal, oldVal) {
 });
 
 vm.data.people.name = 'Tom';
+vm.data.people.age = '18';
+vm.$set(vm.data.people, 'sex', 'male');

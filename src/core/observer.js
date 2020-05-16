@@ -3,6 +3,7 @@ import { arrayMethods } from "./array.js";
 
 export default class Observer {
   constructor(value) {
+    this.value = value;
     this.dep = new Dep();
     def(value, '__ob__', this);
 
@@ -76,10 +77,34 @@ function def(obj, key, val, enumerable) {
   });
 }
 
-export function set(target, key, value) {
+export function set(target, key, val) {
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.length = Math.max(target.length, key);
+    target.splice(key, 1, val);
+    return val;
+  }
 
+  if (target.hasOwnProperty(key)) {
+    target[key] = val;
+    return val;
+  }
+
+  const ob = target.__ob__;
+  if (target._isVue || (ob && ob.vmCount)) {
+    // warn
+    return val;
+  }
+
+  if (!ob) {
+    target[key] = val;
+    return val;
+  }
+
+  defineReactive(ob.value, key, val);
+  ob.dep.notify();
+  return val;
 }
 
 function isValidArrayIndex(index) {
-
+  return typeof index === 'number' && index >= 0;
 }
