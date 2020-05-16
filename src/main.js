@@ -1,6 +1,6 @@
 import './util/environment.js';
 import Watcher from "./core/watcher.js";
-import Observer from "./core/observer.js";
+import Observer, {set} from "./core/observer.js";
 
 const vm = {
   data: {
@@ -16,7 +16,8 @@ const vm = {
     return function unwatch() {
       watcher.teardown();
     };
-  }
+  },
+  $set: set
 };
 
 new Observer(vm.data);

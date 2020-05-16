@@ -75,3 +75,11 @@ function def(obj, key, val, enumerable) {
     configurable: true
   });
 }
+
+export function set(target, key, value) {
+
+}
+
+function isValidArrayIndex(index) {
+
+}
