@@ -105,6 +105,28 @@ export function set(target, key, val) {
   return val;
 }
 
+export function del(target, key) {
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.splice(key, 1);
+    return;
+  }
+
+  const ob = target.__ob__;
+  if (target._isVue || (ob && ob.vmCount)) {
+    // warn
+    return;
+  }
+
+  if (!target.hasOwnProperty(key)) {
+    return;
+  }
+
+  delete target[key];
+  if (ob) {
+    ob.dep.notify();
+  }
+}
+
 function isValidArrayIndex(index) {
   return typeof index === 'number' && index >= 0;
 }

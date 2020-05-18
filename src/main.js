@@ -1,11 +1,12 @@
 import './util/environment.js';
 import Watcher from "./core/watcher.js";
-import Observer, {set} from "./core/observer.js";
+import Observer, {set, del} from "./core/observer.js";
 
 const vm = {
   data: {
     people: {
-      name: ''
+      name: 'Tom',
+      age: '18'
     }
   },
   $watch(pathOrFn, cb, options = {}) {
@@ -17,7 +18,8 @@ const vm = {
       watcher.teardown();
     };
   },
-  $set: set
+  $set: set,
+  $delete: del
 };
 
 new Observer(vm.data);
@@ -28,6 +30,8 @@ vm.$watch('people', function (newVal, oldVal) {
   deep: true
 });
 
-vm.data.people.name = 'Tom';
-vm.data.people.age = '18';
-vm.$set(vm.data.people, 'sex', 'male');
+delete vm.data.people.name;
+setTimeout(() => {
+  vm.$delete(vm.data.people, 'age');
+}, 2000);
+
