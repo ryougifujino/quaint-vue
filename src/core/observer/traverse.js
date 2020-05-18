@@ -1,4 +1,4 @@
-import {isObject} from "./util/index.js";
+import {isObject} from "../util/index.js";
 
 const seenObjects = new Set();
 

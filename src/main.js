@@ -1,6 +1,6 @@
 import './util/environment.js';
-import Watcher from "./core/watcher.js";
-import Observer, {set, del} from "./core/observer.js";
+import Watcher from "./core/observer/watcher.js";
+import Observer, {set, del} from "./core/observer/index.js";
 
 const vm = {
   data: {

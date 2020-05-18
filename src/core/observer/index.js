@@ -1,5 +1,6 @@
 import Dep from "./dep.js";
 import { arrayMethods } from "./array.js";
+import {def, isValidArrayIndex} from "../util/index.js";
 
 export default class Observer {
   constructor(value) {
@@ -68,15 +69,6 @@ function observe(value) {
   return ob;
 }
 
-function def(obj, key, val, enumerable) {
-  Object.defineProperty(obj, key, {
-    value: val,
-    enumerable: !!enumerable,
-    writable: true,
-    configurable: true
-  });
-}
-
 export function set(target, key, val) {
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key);
@@ -125,8 +117,4 @@ export function del(target, key) {
   if (ob) {
     ob.dep.notify();
   }
-}
-
-function isValidArrayIndex(index) {
-  return typeof index === 'number' && index >= 0;
 }
