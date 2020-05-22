@@ -1,4 +1,4 @@
-import './util/environment.js';
+import './core/util/environment.js';
 import Watcher from "./core/observer/watcher.js";
 import Observer, {set, del} from "./core/observer/index.js";
 
