@@ -14,10 +14,10 @@ function _traverse(val, seen) {
   }
   if (val.__ob__) {
     const depId = val.__ob__.dep.id;
-    if (seenObjects.has(depId)) {
+    if (seen.has(depId)) {
       return;
     }
-    seenObjects.add(depId);
+    seen.add(depId);
   }
   if (isA) {
     let i = val.length;
