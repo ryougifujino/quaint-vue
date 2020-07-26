@@ -1,37 +1,22 @@
-import './core/util/environment.js';
-import Watcher from "./core/observer/watcher.js";
-import Observer, {set, del} from "./core/observer/index.js";
+import {parseHTML} from "./core/compiler/parser/html-parser.js";
 
-const vm = {
-  data: {
-    people: {
-      name: 'Tom',
-      age: '18'
-    }
+const htmlExample = `
+<div style="color: red" id="app" data-e32f6>
+
+</div>
+`;
+
+parseHTML(htmlExample.trim(), {
+  start(tag, attrs, unary) {
+    console.log('start()', `tag: ${tag}, attrs: ${JSON.stringify(attrs)}, unary: ${unary}`);
   },
-  $watch(pathOrFn, cb, options = {}) {
-    const watcher = new Watcher(this, pathOrFn, cb, options);
-    if (options.immediate) {
-      cb.call(this, watcher.value);
-    }
-    return function unwatch() {
-      watcher.teardown();
-    };
+  end() {
+
   },
-  $set: set,
-  $delete: del
-};
+  chars(text) {
 
-new Observer(vm.data);
+  },
+  comment(text) {
 
-vm.$watch('people', function (newVal, oldVal) {
-  console.log(`The value changes from ${JSON.stringify(oldVal)} to ${JSON.stringify(newVal)}`);
-}, {
-  deep: true
+  }
 });
-
-delete vm.data.people.name;
-setTimeout(() => {
-  vm.$delete(vm.data.people, 'age');
-}, 2000);
-
