@@ -1,8 +1,10 @@
 import {parseHTML} from "./core/compiler/parser/html-parser.js";
 
 const htmlExample = `
+<!DOCTYPE html>
 <div style="color: red" id="app" data-e32f6>
   <!-- I am comment -->
+  <![if !IE]<link href="non-ie.css" rel="stylesheet"><![endif]>
   <h1>Title</h1>
   <p>
     content1
@@ -12,6 +14,7 @@ const htmlExample = `
 `;
 
 parseHTML(htmlExample.trim(), {
+  shouldKeepComment: true,
   start(tag, attrs, unary) {
     console.log('start()', `tag: ${tag}, attrs: ${JSON.stringify(attrs)}, unary: ${unary}`);
   },
