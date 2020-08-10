@@ -50,14 +50,23 @@ export function parseHTML(html, options) {
     }
 
     if (textEnd >= 0) {
-      const rest = html.substring(textEnd);
-      if (startTagClose.test(rest) || endTag.test(rest)) {
-        const text = html.substring(0, textEnd).trim();
-        if (text) {
-          options.chars(text);
-        }
+      let rest, next;
+      rest = html.substring(textEnd);
+      while (
+        !startTagOpen.test(rest) &&
+        !endTag.test(rest) &&
+        !comment.test(rest) &&
+        !conditionalComment.test(rest)
+        ) {
+        next = rest.indexOf('<', 1);
+        textEnd += next;
+        rest = html.slice(textEnd);
       }
-      advance(textEnd);
+      const text = html.substring(0, textEnd);
+      if (text) {
+        advance(text.length);
+        options.chars(text);
+      }
     }
   }
 

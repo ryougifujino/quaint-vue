@@ -7,7 +7,7 @@ const htmlExample = `
   <![if !IE]<link href="non-ie.css" rel="stylesheet"><![endif]>
   <h1>Title</h1>
   <p>
-    content1
+    content1<<1.1
     content2
   </p>
 </div>
@@ -22,7 +22,7 @@ parseHTML(htmlExample.trim(), {
     console.log('end()', `tag: ${tag}`);
   },
   chars(text) {
-    console.log('chars()', `text: ${text}`);
+    console.log('chars()', `text: "${text}"`);
   },
   comment(text) {
     console.log('comment()', `comment: ${text}`);
